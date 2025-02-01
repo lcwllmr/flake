@@ -34,7 +34,8 @@ in
     extraGroups = mkIf userNotRoot [ "wheel" ];
   };
 
-  networking.useDHCP = true;
+  # only use DHCP if NetworkManager is not present
+  networking.useDHCP = mkIf (!config.core.services.networkManager) true;
 
   core.persist = {
     userDirs = [
