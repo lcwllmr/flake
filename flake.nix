@@ -21,7 +21,7 @@
           core = import ./modules/nixos/core { inherit inputs; };
         };
         homeModules = {
-          fish = import ./modules/home/fish.nix { inherit inputs; };
+          fish = import ./modules/home/fish.nix;
         };
       };
       systems = [
