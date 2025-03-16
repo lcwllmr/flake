@@ -11,7 +11,7 @@
 
   outputs =
     inputs@{ flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
+    flake-parts.lib.mkFlake { inherit inputs; } ({ self, withSystem, ... }: {
       imports = [
         inputs.treefmt-nix.flakeModule
         inputs.home-manager.flakeModules.home-manager
@@ -23,6 +23,18 @@
         homeModules = {
           fish = import ./modules/home/fish.nix;
           helix = import ./modules/home/helix.nix;
+        };
+        homeConfigurations = {
+          docker = withSystem "x86_64-linux" (ctx@{ pkgs, ... }:
+            inputs.home-manager.lib.homeManagerConfiguration {
+              inherit pkgs;
+              extraSpecialArgs = {
+                inherit self;
+              };
+              modules = [
+                ./configs/home/docker.nix
+              ];
+            });
         };
       };
       systems = [
@@ -38,5 +50,5 @@
             programs.nixfmt.package = pkgs.nixfmt-rfc-style;
           };
         };
-    };
+    });
 }
