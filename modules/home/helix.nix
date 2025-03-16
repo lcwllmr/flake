@@ -18,7 +18,7 @@
           name = "markdown";
           indent = { tab-width = 2; unit = "  "; };
         }
-      ]
+      ];
       language-servers = [ { name = "nixd"; } ];
     };
     settings = {
