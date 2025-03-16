@@ -13,13 +13,13 @@
           name = "nix";
           auto-format = true;
           formatter = { command = "nixfmt"; };
+          language-servers = [ { name = "nixd"; } ];
         }
         {
           name = "markdown";
           indent = { tab-width = 2; unit = "  "; };
         }
       ];
-      language-servers = [ { name = "nixd"; } ];
     };
     settings = {
       editor = {
