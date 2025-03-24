@@ -5,19 +5,25 @@
   programs.helix = {
     enable = true;
     extraPackages = with pkgs; [
-      nixfmt-rfc-style nixd
+      nixfmt-rfc-style
+      nixd
     ];
     languages = {
       language = [
         {
           name = "nix";
           auto-format = true;
-          formatter = { command = "nixfmt"; };
+          formatter = {
+            command = "nixfmt";
+          };
           language-servers = [ { name = "nixd"; } ];
         }
         {
           name = "markdown";
-          indent = { tab-width = 2; unit = "  "; };
+          indent = {
+            tab-width = 2;
+            unit = "  ";
+          };
         }
       ];
     };

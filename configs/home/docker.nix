@@ -9,6 +9,7 @@
   home.packages = [ pkgs.rclone ];
 
   imports = with self.homeModules; [
-    fish helix
+    fish
+    helix
   ];
 }
