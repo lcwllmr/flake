@@ -6,21 +6,25 @@ in
 {
   boot.loader = {
     timeout = mkForce 0; # disable generation selection
-    #systemd-boot.enable = true;
-    #efi.canTouchEfiVariables = true;
-    grub = {
-      efiSupport = true;
-      efiInstallAsRemovable = true;
-    };
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+
+    # NOTE: deploying via nixos-anywhere on Hetzner cloud
+    # requires grub instead of systemd-boot. Maybe make this an
+    # option at some point.
+    #grub = {
+    #  efiSupport = true;
+    #  efiInstallAsRemovable = true;
+    #};
   };
 
   disko.devices.disk.main =
     let
-      bootPartition = {
-        name = "boot";
-        size = "1M";
-        type = "EF02";
-      };
+      #bootPartition = {
+      #  name = "boot";
+      #  size = "1M";
+      #  type = "EF02";
+      #};
       efiSystemPartition = {
         name = "esp";
         size = "500M";
@@ -77,7 +81,7 @@ in
       content = {
         type = "gpt";
         partitions = {
-          boot = bootPartition;
+          #boot = bootPartition;
           esp = efiSystemPartition;
           nixos = {
             name = "nixos";
