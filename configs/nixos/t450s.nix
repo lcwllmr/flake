@@ -7,6 +7,18 @@ inputs.nixpkgs.lib.nixosSystem {
     (
       { pkgs, ... }:
       {
+        # kernel modules
+        boot.initrd.availableKernelModules = [
+          "xhci_pci"
+          "ehci_pci"
+          "ahci"
+          "usb_storage"
+          "sd_mod"
+        ];
+        boot.initrd.kernelModules = [ ];
+        boot.kernelModules = [ "kvm-intel" ];
+        boot.extraModulePackages = [ ];
+
         # some hardware settings from gh:NixOS/nixos-hardware
         hardware.enableAllFirmware = true;
         hardware.cpu.intel.updateMicrocode = true;
@@ -19,6 +31,7 @@ inputs.nixpkgs.lib.nixosSystem {
         ];
         hardware.trackpoint.enable = true;
         hardware.trackpoint.emulateWheel = true;
+        services.fstrim.enable = true;
 
         # software core
         core = {
