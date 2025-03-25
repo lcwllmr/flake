@@ -15,6 +15,11 @@ inputs.nixpkgs.lib.nixosSystem {
         # speed up builds by trading off compression
         isoImage.squashfsCompression = "gzip -Xcompression-level 1";
 
+        # NetworkManager instead of wpa_supplicant
+        networking.wireless.enable = false;
+        networking.networkmanager.enable = true;
+        users.users.nixos.extraGroups = [ "networkmanager" ];
+
         # enable flakes out-of-the-box
         nix.settings.experimental-features = [
           "nix-command"
