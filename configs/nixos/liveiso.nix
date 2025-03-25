@@ -9,6 +9,9 @@ inputs.nixpkgs.lib.nixosSystem {
           (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
         ];
 
+        # use another font to keep things fun
+        console.font = "Lat2-Terminus16";
+
         # speed up builds by trading off compression
         isoImage.squashfsCompression = "gzip -Xcompression-level 1";
 
