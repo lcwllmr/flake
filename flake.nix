@@ -1,10 +1,22 @@
 {
   inputs = {
-    treefmt-nix.url = "github:numtide/treefmt-nix";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    home-manager.url = "github:nix-community/home-manager";
-    disko.url = "github:nix-community/disko";
-    impermanence.url = "github:nix-community/impermanence";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    impermanence = {
+      url = "github:nix-community/impermanence";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -44,6 +56,7 @@
 
       nixosConfigurations = {
         liveiso = import ./configs/nixos/liveiso.nix { inherit inputs; };
+        t450s = import ./configs/nixos/t450s.nix { inherit inputs; };
       };
     };
 }
