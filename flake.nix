@@ -49,6 +49,7 @@
       };
 
       homeModules = {
+        git = import ./modules/home/git.nix;
         fish = import ./modules/home/fish.nix;
         helix = import ./modules/home/helix.nix;
       };
