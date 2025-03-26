@@ -51,6 +51,8 @@ inputs.nixpkgs.lib.nixosSystem {
           services.networkManager = true;
         };
 
+        # temporary fixes until the core module becomes a bit smarter
+        console.font = "Lat2-Terminus16";
         core.persist.userDirs = [ ".ssh" ];
 
         home-manager.useGlobalPkgs = true;
