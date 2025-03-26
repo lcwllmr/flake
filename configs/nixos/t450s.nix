@@ -50,7 +50,35 @@ inputs.nixpkgs.lib.nixosSystem {
           services.networkManager = true;
         };
 
+        # install quite minimal gnome
+        services.xserver.enable = true;
+        services.xserver.displayManager.gdm.enable = true;
+        services.xserver.desktopManager.gnome.enable = true;
+        environment.gnome.excludePackages = with pkgs; [
+          gnome-tour
+          gnome-user-docs
+          gnome-software
+          gnome-text-editor
+          gnome-weather
+          gnome-maps
+          simple-scan
+          orca
+          geary
+          gnome-disk-utility
+          gnome-backgrounds
+          baobab
+          gnome-music
+        ];
+
+        home-manager.users.lcwllmr.dconf = {
+          enable = true;
+          settings = {
+            "org/gnome/desktop/interface".color-scheme = "prefer-dark";
+          };
+        };
+
         # temporary fixes until the core module becomes a bit smarter
+        time.timeZone = "Europe/Oslo";
         console.font = "Lat2-Terminus16";
 
         home-manager.useGlobalPkgs = true;
