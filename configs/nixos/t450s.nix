@@ -7,7 +7,7 @@ inputs.nixpkgs.lib.nixosSystem {
     (
       { pkgs, ... }:
       {
-        # kernel modules
+        # base stuff from nixos-generate-config
         boot.initrd.availableKernelModules = [
           "xhci_pci"
           "ehci_pci"
@@ -18,17 +18,20 @@ inputs.nixpkgs.lib.nixosSystem {
         boot.initrd.kernelModules = [ ];
         boot.kernelModules = [ "kvm-intel" ];
         boot.extraModulePackages = [ ];
+        networking.interfaces.enp0s25.useDHCP = true;
+        networking.interfaces.wlan0.useDHCP = true;
 
-        # some hardware settings from gh:NixOS/nixos-hardware
-        hardware.enableAllFirmware = true;
+        # some hardware settings from gh:nixos-hardware for the t450s
+        hardware.enableRedistributableFirmware = true;
         hardware.cpu.intel.updateMicrocode = true;
         hardware.graphics.enable = true;
-        hardware.graphics.extraPackages = with pkgs; [
-          # these are supported since broadwell (which i7-5600U is)
-          intel-media-driver
-          intel-ocl
-          intel-vaapi-driver
-        ];
+        # NOTE: these don't seem to work currently. getting download errors. gotta investigate
+        #hardware.graphics.extraPackages = with pkgs; [
+        #  # these are supported since broadwell (which i7-5600U is)
+        #  intel-media-driver
+        #  intel-ocl
+        #  intel-vaapi-driver
+        #];
         hardware.trackpoint.enable = true;
         hardware.trackpoint.emulateWheel = true;
         services.fstrim.enable = true;
@@ -48,6 +51,8 @@ inputs.nixpkgs.lib.nixosSystem {
           services.networkManager = true;
         };
 
+        core.persist.userDirs = [ ".ssh" ];
+
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
         home-manager.users.lcwllmr = {
@@ -57,6 +62,7 @@ inputs.nixpkgs.lib.nixosSystem {
           programs.home-manager.enable = true;
           imports = with inputs.self.homeModules; [
             fish
+            git
             helix
           ];
         };
