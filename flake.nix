@@ -44,6 +44,21 @@
         formatting = treefmtEval.${pkgs.system}.config.build.check self;
       });
 
+      apps = eachSystem (pkgs: {
+        unmelt = {
+          type = "app";
+          program = let
+            script = pkgs.writeShellScriptBin "unmelt" ''
+              echo "Type the melt seed phrase and then enter EOF (via Ctrl+D)." \
+                && mkdir -p ~/.ssh \
+                && melt restore ~/.ssh/id_ed25519 \
+                && echo "SSH key has been written to ~/.ssh. Public key for validation:" \
+                && cat ~/.ssh/id_ed25519.pub
+            '';
+          in "${script}/bin/unmelt";
+        };
+      });
+
       nixosModules = {
         core = import ./modules/nixos/core { inherit inputs; };
       };
