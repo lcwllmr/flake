@@ -53,7 +53,6 @@ inputs.nixpkgs.lib.nixosSystem {
 
         # temporary fixes until the core module becomes a bit smarter
         console.font = "Lat2-Terminus16";
-        core.persist.userDirs = [ ".ssh" ];
 
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;

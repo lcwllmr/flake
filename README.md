@@ -8,5 +8,5 @@ and boot it from a USB stick.
 Connect to wifi using `nmtui` and then run the `disko-install` script.
 For instance, for my ThinkPad T450s:
 ```
-sudo disko-install --flake gh:lcwllmr/flake#t450s --mode format --disk main /dev/sda
+sudo disko-install --flake github:lcwllmr/flake#t450s --mode format --disk main /dev/sda
 ```
