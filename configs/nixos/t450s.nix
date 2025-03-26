@@ -18,11 +18,11 @@ inputs.nixpkgs.lib.nixosSystem {
         boot.initrd.kernelModules = [ ];
         boot.kernelModules = [ "kvm-intel" ];
         boot.extraModulePackages = [ ];
-        networking.interfaces.enp0s25.useDHCP = true;
-        networking.interfaces.wlan0.useDHCP = true;
+        networking.useDHCP = false; # networkmanager should do that
 
         # some hardware settings from gh:nixos-hardware for the t450s
-        hardware.enableRedistributableFirmware = true;
+        nixpkgs.config.allowUnfree = true;
+        hardware.enableAllFirmware = true;
         hardware.cpu.intel.updateMicrocode = true;
         hardware.graphics.enable = true;
         # NOTE: these don't seem to work currently. getting download errors. gotta investigate
