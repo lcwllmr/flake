@@ -15,7 +15,7 @@ in
     core.persist.sysDirs = [
       "/etc/NetworkManager"
       "/var/lib/NetworkManager"
-      "/var/lib/iwd"
+      # "/var/lib/iwd"
     ];
   };
 }
