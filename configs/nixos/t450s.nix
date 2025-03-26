@@ -24,13 +24,10 @@ inputs.nixpkgs.lib.nixosSystem {
         hardware.enableAllFirmware = true;
         hardware.cpu.intel.updateMicrocode = true;
         hardware.graphics.enable = true;
-        # NOTE: these don't seem to work currently. getting download errors. gotta investigate
-        #hardware.graphics.extraPackages = with pkgs; [
-        #  # these are supported since broadwell (which i7-5600U is)
-        #  intel-media-driver
-        #  intel-ocl
-        #  intel-vaapi-driver
-        #];
+        hardware.graphics.extraPackages = with pkgs; [
+          intel-media-driver
+          # intel-vaapi-driver
+        ];
         hardware.trackpoint.enable = true;
         hardware.trackpoint.emulateWheel = true;
         services.fstrim.enable = true;
@@ -51,9 +48,18 @@ inputs.nixpkgs.lib.nixosSystem {
         };
 
         # install quite minimal gnome
-        services.xserver.enable = true;
-        services.xserver.displayManager.gdm.enable = true;
-        services.xserver.desktopManager.gnome.enable = true;
+        services.xserver = {
+          enable = true;
+          desktopManager.gnome.enable = true;
+          displayManager.gdm.enable = true;
+          excludePackages = [ pkgs.xterm ];
+        };
+
+        services.displayManager = {
+          autoLogin.enable = true;
+          autoLogin.user = "lcwllmr";
+        };
+
         environment.gnome.excludePackages = with pkgs; [
           gnome-tour
           gnome-user-docs
@@ -68,13 +74,48 @@ inputs.nixpkgs.lib.nixosSystem {
           gnome-backgrounds
           baobab
           gnome-music
+          gnome-shell-extensions
+          gnome-clocks
+          gnome-connections
+          gnome-calculator
+          totem
+          gnome-logs
+          gnome-font-viewer
+          gnome-characters
+          snapshot
+          xdg-user-dirs
+          xdg-user-dirs-gtk
         ];
+
+        documentation.nixos.enable = false;
 
         home-manager.users.lcwllmr.dconf = {
           enable = true;
           settings = {
             "org/gnome/desktop/interface".color-scheme = "prefer-dark";
+            "org/gnome/Console".audible-bell = false;
+            "org/gnome/shell".favorite-apps = [
+              "org.gnome.Epiphany.desktop"
+              "org.gnome.Nautilus.desktop"
+              "org.gnome.Console.desktop"
+            ];
           };
+        };
+
+        home-manager.users.lcwllmr.xdg = {
+          enable = true;
+          userDirs.createDirectories = false;
+        };
+
+        # set fish as default shell for interactive sessions
+        programs.bash = {
+          interactiveShellInit = ''
+            if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
+            then
+              shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
+              exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
+            fi
+          '';
         };
 
         # temporary fixes until the core module becomes a bit smarter
