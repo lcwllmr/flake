@@ -47,17 +47,34 @@ inputs.nixpkgs.lib.nixosSystem {
           services.networkManager = true;
         };
 
+        # tpm2 setup for automatic disk unlocking
+        boot.initrd.systemd.enable = true;
+        boot.initrd.systemd.tpm2.enable = true;
+        security.tpm2.enable = true;
+        security.tpm2.pkcs11.enable = true;
+        security.tpm2.tctiEnvironment.enable = true;
+        users.users.lcwllmr.extraGroups = [ "tss" ];
+
+        # quiet boot with nice splashscreen instead of boring messages
+        boot.plymouth.enable = true;
+        boot.initrd.verbose = false;
+        boot.consoleLogLevel = 0;
+        boot.kernelParams = [
+          "quiet"
+          "splash"
+          "boot.shell_on_fail"
+          "loglevel=3"
+          "rd.systemd.show_status=false"
+          "rd.udev.log_level=3"
+          "udev.log_priority=3"
+        ];
+
         # install quite minimal gnome
         services.xserver = {
           enable = true;
           desktopManager.gnome.enable = true;
           displayManager.gdm.enable = true;
           excludePackages = [ pkgs.xterm ];
-        };
-
-        services.displayManager = {
-          autoLogin.enable = true;
-          autoLogin.user = "lcwllmr";
         };
 
         environment.gnome.excludePackages = with pkgs; [
