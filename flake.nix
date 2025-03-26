@@ -51,7 +51,7 @@
             script = pkgs.writeShellScriptBin "unmelt" ''
               echo "Type the melt seed phrase and then enter EOF (via Ctrl+D)." \
                 && mkdir -p ~/.ssh \
-                && melt restore ~/.ssh/id_ed25519 \
+                && ${pkgs.melt}/bin/melt restore ~/.ssh/id_ed25519 \
                 && echo "SSH key has been written to ~/.ssh. Public key for validation:" \
                 && cat ~/.ssh/id_ed25519.pub
             '';
