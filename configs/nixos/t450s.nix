@@ -18,7 +18,6 @@ inputs.nixpkgs.lib.nixosSystem {
         boot.initrd.kernelModules = [ ];
         boot.kernelModules = [ "kvm-intel" ];
         boot.extraModulePackages = [ ];
-        networking.useDHCP = false; # networkmanager should do that
 
         # some hardware settings from gh:nixos-hardware for the t450s
         nixpkgs.config.allowUnfree = true;

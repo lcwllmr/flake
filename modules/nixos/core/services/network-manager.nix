@@ -6,13 +6,7 @@ let
 in
 {
   config = mkIf config.core.services.networkManager {
-    networking = {
-      wireless.iwd.enable = true;
-      networkmanager = {
-        enable = true;
-        wifi.backend = "iwd";
-      };
-    };
+    networking.networkmanager.enable = true;
 
     users.users.${user}.extraGroups = mkIf mainUserNotRoot [
       "networkmanager"
