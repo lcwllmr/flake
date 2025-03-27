@@ -2,7 +2,6 @@
 inputs.nixpkgs.lib.nixosSystem {
   system = "x86_64-linux";
   modules = [
-    inputs.home-manager.nixosModules.home-manager
     inputs.self.nixosModules.core
     (
       { pkgs, ... }:
@@ -45,6 +44,29 @@ inputs.nixpkgs.lib.nixosSystem {
             impermanent = true;
           };
           services.networkManager = true;
+          home.imports = with inputs.self.homeModules; [
+            fish
+            git
+            helix
+            {
+              xdg = {
+                enable = true;
+                userDirs.createDirectories = false;
+              };
+              dconf = {
+                enable = true;
+                settings = {
+                  "org/gnome/desktop/interface".color-scheme = "prefer-dark";
+                  "org/gnome/Console".audible-bell = false;
+                  "org/gnome/shell".favorite-apps = [
+                    "org.gnome.Epiphany.desktop"
+                    "org.gnome.Nautilus.desktop"
+                    "org.gnome.Console.desktop"
+                  ];
+                };
+              };
+            }
+          ];
         };
 
         # tpm2 setup for automatic disk unlocking
@@ -106,24 +128,6 @@ inputs.nixpkgs.lib.nixosSystem {
 
         documentation.nixos.enable = false;
 
-        home-manager.users.lcwllmr.dconf = {
-          enable = true;
-          settings = {
-            "org/gnome/desktop/interface".color-scheme = "prefer-dark";
-            "org/gnome/Console".audible-bell = false;
-            "org/gnome/shell".favorite-apps = [
-              "org.gnome.Epiphany.desktop"
-              "org.gnome.Nautilus.desktop"
-              "org.gnome.Console.desktop"
-            ];
-          };
-        };
-
-        home-manager.users.lcwllmr.xdg = {
-          enable = true;
-          userDirs.createDirectories = false;
-        };
-
         # set fish as default shell for interactive sessions
         programs.bash = {
           interactiveShellInit = ''
@@ -139,21 +143,7 @@ inputs.nixpkgs.lib.nixosSystem {
         time.timeZone = "Europe/Oslo";
         console.font = "Lat2-Terminus16";
 
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.users.lcwllmr = {
-          home.username = "lcwllmr";
-          home.homeDirectory = "/home/lcwllmr";
-          home.stateVersion = "24.11";
-          programs.home-manager.enable = true;
-          imports = with inputs.self.homeModules; [
-            fish
-            git
-            helix
-          ];
-        };
-
-        systemd.services.mount-workspaces = {
+        systemd.user.services.mount-workspaces = {
           description = "Bind-mount all workspaces into user's home.";
           wantedBy = [ "local-fs.target" ]; # for a user service this should be started on login?
           path = with pkgs; [

@@ -1,5 +1,5 @@
 { inputs }:
-{ lib, ... }:
+{ config, lib, ... }:
 {
   options.core =
     with lib;
@@ -91,12 +91,12 @@
       services = {
         ssh = {
           enable = mkOption {
-            description = "Enable OpenSSH service on port 22 allowing only key-based authentification and only for `core.mainUser`.";
+            description = "Enable OpenSSH service on port 22 allowing only key-based authentification and only for `core.user`.";
             type = bool;
             default = false;
           };
           authorizedKeys = mkOption {
-            description = "List of authorized SSH public keys for `core.mainUser`.";
+            description = "List of authorized SSH public keys for `core.user`.";
             type = listOf str;
             default = [ ];
           };
@@ -124,11 +124,24 @@
   imports = [
     inputs.disko.nixosModules.disko
     inputs.impermanence.nixosModules.impermanence
+    inputs.home-manager.nixosModules.home-manager
     ./base.nix
     ./boot-disk.nix
     ./impermanence.nix
+    ./home-manager.nix
     ./services/openssh.nix
     ./services/network-manager.nix
     ./services/docker.nix
+    (lib.mkAliasOptionModule
+      [
+        "core"
+        "home"
+      ]
+      [
+        "home-manager"
+        "users"
+        config.core.user
+      ]
+    )
   ];
 }
