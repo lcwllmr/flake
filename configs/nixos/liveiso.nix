@@ -2,6 +2,7 @@
 inputs.nixpkgs.lib.nixosSystem {
   system = "x86_64-linux";
   modules = [
+    inputs.home-manager.nixosModules.home-manager
     (
       { modulesPath, pkgs, ... }:
       {
@@ -29,8 +30,20 @@ inputs.nixpkgs.lib.nixosSystem {
         # pre-install some utitlities for local installation
         environment.systemPackages = with pkgs; [
           disko
-          helix
         ];
+
+        # pull in some of my home-manager modules to feel homey
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.users.nixos = {
+          home.username = "nixos";
+          home.homeDirectory = "/home/nixos";
+          home.stateVersion = "24.11";
+          imports = with inputs.self.homeModules; [
+            git
+            helix
+          ];
+        };
       }
     )
   ];
