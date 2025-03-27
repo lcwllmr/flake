@@ -1,3 +1,5 @@
+# TODO:
+#   - allow only encrypted main drives
 {
   config,
   pkgs,
@@ -30,36 +32,40 @@ in
     # purge and re-new root partition on boot
     boot.initrd.systemd.enable = true;
     boot.initrd.systemd.tpm2.enable = mkIf b.encrypted true;
-    boot.initrd.systemd.services.rollback = {
-      description = "Rollback BTRFS root subvolume to a pristine state";
-      wantedBy = [
-        "initrd.target"
-      ];
-      after = mkIf b.encrypted [
-        # TODO: what happens on non-encrypted systems?
-        "systemd-cryptsetup@enc.service"
-      ];
-      before = [
-        "sysroot.mount"
-      ];
-      unitConfig.DefaultDependencies = "no";
-      serviceConfig.Type = "oneshot";
-      script = ''
-        delete_subvol_rec() {
-          IFS=$'\n'
-          for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
-            delete_subvol_rec "/mnt/$i"
-          done
-          btrfs subvolume delete "$1"
-        }
+    boot.initrd.systemd.services.rollback =
+      let
+        target = if b.encrypted then "crypted" else "nixos";
+      in
+      {
+        description = "Rollback BTRFS root subvolume to a pristine state";
+        wantedBy = [
+          "initrd.target"
+        ];
+        after = mkIf b.encrypted [
+          # TODO: this is added anyway only in case of encryption so...
+          "systemd-cryptsetup@${target}.service"
+        ];
+        before = [
+          "sysroot.mount"
+        ];
+        unitConfig.DefaultDependencies = "no";
+        serviceConfig.Type = "oneshot";
+        script = ''
+          delete_subvol_rec() {
+            IFS=$'\n'
+            for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
+              delete_subvol_rec "/mnt/$i"
+            done
+            btrfs subvolume delete "$1"
+          }
 
-        mkdir -p /mnt
-        mount -o subvol=/ /dev/mapper/${if b.encrypted then "crypted" else "nixos"} /mnt
-        delete_subvol_rec /mnt/root
-        btrfs subvolume create /mnt/root
-        umount /mnt
-      '';
-    };
+          mkdir -p /mnt
+          mount /dev/mapper/${target} /mnt
+          delete_subvol_rec /mnt/root
+          btrfs subvolume create /mnt/root
+          umount /mnt
+        '';
+      };
 
     # otherwise you'd see the lecture after each reboot
     security.sudo.extraConfig = mkIf userNotRoot ''
