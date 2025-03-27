@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 with lib;
 let
   c = config.core;
@@ -19,6 +24,11 @@ in
 
   networking.hostName = c.hostName;
   system.stateVersion = c.stateVersion;
+
+  nix.channel.enable = false;
+  nix = {
+    nixPath = [ "nixpkgs=${pkgs.path}" ];
+  };
 
   nix.settings = {
     experimental-features = [
