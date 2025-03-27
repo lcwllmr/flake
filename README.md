@@ -8,6 +8,8 @@
   modules can still be used in non-NixOS environment
 - find a convenient and portable way to type Unicode math symbols
 - build system for workspace management compatible with impermanence
+- make impermanence and disk encryption mandatory
+- setup home-manager from the module itself
 
 ## Installation steps
 
