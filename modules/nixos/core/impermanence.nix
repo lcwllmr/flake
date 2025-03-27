@@ -1,5 +1,3 @@
-# TODO:
-#   - allow only encrypted main drives
 {
   config,
   pkgs,
@@ -10,6 +8,7 @@ with lib;
 let
   b = config.core.bootDisk;
   p = config.core.persist;
+  hmp = config.core.home.persist;
   user = config.core.user;
   homeDir = if user == "root" then "/root" else "/home/${user}";
   userNotRoot = user != "root";
@@ -24,8 +23,8 @@ in
       files = p.sysFiles;
       users.${config.core.user} = {
         home = homeDir;
-        directories = p.userDirs;
-        files = p.userFiles;
+        directories = p.userDirs ++ hmp.dirs;
+        files = p.userFiles ++ hmp.files;
       };
     };
 
@@ -86,8 +85,8 @@ in
             prependHome = path: "${homeDir}/" + path;
             sysFiles = map getFileName p.sysFiles;
             sysDirs = map appendWildcard (map getDirName p.sysDirs);
-            userFiles = map prependHome (map getFileName p.userFiles);
-            userDirs = map prependHome (map appendWildcard (map getDirName p.userDirs));
+            userFiles = map prependHome (map getFileName (p.userFiles ++ hmp.files));
+            userDirs = map prependHome (map appendWildcard (map getDirName (p.userDirs ++ hmp.dirs)));
             extraExcludedDirs = map appendWildcard [
               "/boot"
               "/nix"

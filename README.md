@@ -4,8 +4,6 @@
 
 `modules/nixos/core`:
 - test if secure boot works nicely; would increase security with TPM2 unlock
-- create independent home-manager interface to impermanence so that the
-  modules can still be used in non-NixOS environment
 - find a convenient and portable way to type Unicode math symbols
 - build system for workspace management compatible with impermanence
 - make impermanence and disk encryption mandatory
