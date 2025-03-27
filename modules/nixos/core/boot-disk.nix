@@ -53,6 +53,7 @@ in
           "/root" = mkSubvolume "root" "/";
           "/nix" = mkIf b.impermanent (mkSubvolume "nix" "/nix");
           "/persist" = mkIf b.impermanent (mkSubvolume "persist" "/persist");
+          "/workspaces" = mkSubvolume "workspaces" "/workspaces";
           "/swap" = {
             mountpoint = "/swap";
             swap.swapfile.size = "${builtins.toString b.swapSizeMb}M";

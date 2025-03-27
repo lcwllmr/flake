@@ -152,6 +152,27 @@ inputs.nixpkgs.lib.nixosSystem {
             helix
           ];
         };
+
+        systemd.services.mount-workspaces = {
+          description = "Bind-mount all workspaces into user's home.";
+          wantedBy = [ "local-fs.target" ]; # for a user service this should be started on login?
+          path = with pkgs; [
+            util-linux
+            busybox
+          ];
+          script = ''
+            for dir in /workspaces/*; do
+              [ -d "$dir" ] || continue
+              target="/home/lcwllmr/$(basename "$dir")" \
+                && install -d -o lcwllmr -g users "$target" \
+                && mount --bind "$dir" "$target"
+            done
+          '';
+        };
+
+        systemd.tmpfiles.rules = [
+          "d /workspaces 0755 lcwllmr users -"
+        ];
       }
     )
   ];
