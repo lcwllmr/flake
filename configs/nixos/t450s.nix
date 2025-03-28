@@ -50,10 +50,25 @@ inputs.nixpkgs.lib.nixosSystem {
             git
             helix
             {
-              xdg = {
-                enable = true;
-                userDirs.createDirectories = false;
-              };
+              xdg =
+                let
+                  home = "/home/lcwllmr";
+                in
+                {
+                  enable = true;
+                  userDirs = {
+                    enable = true;
+                    createDirectories = true;
+                    desktop = home;
+                    documents = home;
+                    download = home;
+                    music = home;
+                    pictures = home;
+                    publicShare = home;
+                    templates = home;
+                    videos = home;
+                  };
+                };
               dconf = {
                 enable = true;
                 settings = {
@@ -99,6 +114,8 @@ inputs.nixpkgs.lib.nixosSystem {
           displayManager.gdm.enable = true;
           excludePackages = [ pkgs.xterm ];
         };
+
+        environment.systemPackages = with pkgs; [ wl-clipboard ];
 
         environment.gnome.excludePackages = with pkgs; [
           gnome-tour
