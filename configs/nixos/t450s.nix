@@ -44,6 +44,7 @@ inputs.nixpkgs.lib.nixosSystem {
             impermanent = true;
           };
           services.networkManager = true;
+          apps.firefox = true;
           home.imports = with inputs.self.homeModules; [
             fish
             git
@@ -59,9 +60,9 @@ inputs.nixpkgs.lib.nixosSystem {
                   "org/gnome/desktop/interface".color-scheme = "prefer-dark";
                   "org/gnome/Console".audible-bell = false;
                   "org/gnome/shell".favorite-apps = [
-                    "org.gnome.Epiphany.desktop"
-                    "org.gnome.Nautilus.desktop"
+                    "firefox.desktop"
                     "org.gnome.Console.desktop"
+                    "org.gnome.Nautilus.desktop"
                   ];
                 };
               };
@@ -143,25 +144,8 @@ inputs.nixpkgs.lib.nixosSystem {
         time.timeZone = "Europe/Oslo";
         console.font = "Lat2-Terminus16";
 
-        systemd.user.services.mount-workspaces = {
-          description = "Bind-mount all workspaces into user's home.";
-          wantedBy = [ "local-fs.target" ]; # for a user service this should be started on login?
-          path = with pkgs; [
-            util-linux
-            busybox
-          ];
-          script = ''
-            for dir in /workspaces/*; do
-              [ -d "$dir" ] || continue
-              target="/home/lcwllmr/$(basename "$dir")" \
-                && install -d -o lcwllmr -g users "$target" \
-                && mount --bind "$dir" "$target"
-            done
-          '';
-        };
-
-        systemd.tmpfiles.rules = [
-          "d /workspaces 0755 lcwllmr users -"
+        core.persist.userDirs = [
+          ".local/workspaces"
         ];
       }
     )

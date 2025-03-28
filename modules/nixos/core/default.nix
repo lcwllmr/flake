@@ -119,6 +119,14 @@
           };
         };
       };
+
+      apps = {
+        firefox = mkOption {
+          description = "Install Firefox web browser with only little bloat.";
+          type = bool;
+          default = false;
+        };
+      };
     };
 
   imports = [
@@ -132,6 +140,7 @@
     ./services/openssh.nix
     ./services/network-manager.nix
     ./services/docker.nix
+    ./apps/firefox.nix
     (lib.mkAliasOptionModule
       [
         "core"
