@@ -92,10 +92,25 @@ with lib;
             installation_mode = "blocked";
           };
 
+          # uBlock Origin
           "uBlock0@raymondhill.net" = {
             install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
             installation_mode = "force_installed";
             default_area = "menupanel";
+          };
+
+          # Bitwarden password manager
+          "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
+            install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
+            installation_mode = "force_installed";
+            default_area = "navbar";
+          };
+
+          # Raindrop bookmark manager
+          "jid0-adyhmvsP91nUO8pRv0Mn2VKeB84@jetpack" = {
+            install_url = "https://addons.mozilla.org/firefox/downloads/latest/raindropio/latest.xpi";
+            installation_mode = "force_installed";
+            default_area = "navbar";
           };
         };
       };
