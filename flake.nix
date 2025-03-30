@@ -16,6 +16,10 @@
     impermanence = {
       url = "github:nix-community/impermanence";
     };
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -47,15 +51,17 @@
       apps = eachSystem (pkgs: {
         unmelt = {
           type = "app";
-          program = let
-            script = pkgs.writeShellScriptBin "unmelt" ''
-              echo "Type the melt seed phrase and then enter EOF (via Ctrl+D)." \
-                && mkdir -p ~/.ssh \
-                && ${pkgs.melt}/bin/melt restore ~/.ssh/id_ed25519 \
-                && echo "SSH key has been written to ~/.ssh. Public key for validation:" \
-                && cat ~/.ssh/id_ed25519.pub
-            '';
-          in "${script}/bin/unmelt";
+          program =
+            let
+              script = pkgs.writeShellScriptBin "unmelt" ''
+                echo "Type the melt seed phrase and then enter EOF (via Ctrl+D)." \
+                  && mkdir -p ~/.ssh \
+                  && ${pkgs.melt}/bin/melt restore ~/.ssh/id_ed25519 \
+                  && echo "SSH key has been written to ~/.ssh. Public key for validation:" \
+                  && cat ~/.ssh/id_ed25519.pub
+              '';
+            in
+            "${script}/bin/unmelt";
         };
       });
 
@@ -72,6 +78,7 @@
       nixosConfigurations = {
         liveiso = import ./configs/nixos/liveiso.nix { inherit inputs; };
         t450s = import ./configs/nixos/t450s.nix { inherit inputs; };
+        cmx150 = import ./configs/wsl/cmx150.nix { inherit inputs; };
       };
     };
 }
