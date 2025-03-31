@@ -6,7 +6,10 @@
 - test if secure boot works nicely; would increase security with TPM2 unlock
 - find a convenient and portable way to type Unicode math symbols
 - build system for workspace management compatible with impermanence
-- make impermanence and disk encryption mandatory
+- make impermanence and disk encryption mandatory for nixos builds
+- instead of separating home and nixos modules they should be presented in a unified
+  way (e.g. conditionally act as home-only or add nixos extra stuff)
+- split up this big module into multiple independent ones
 
 ## Installation steps
 
