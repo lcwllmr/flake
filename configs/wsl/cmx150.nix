@@ -25,6 +25,10 @@ inputs.nixpkgs.lib.nixosSystem {
           trusted-users = [ "@wheel" ];
         };
 
+        # setup for VS Code remote development
+        environment.systemPackages = [ pkgs.wget ];
+        programs.nix-ld.enable = true;
+
         programs.bash = {
           interactiveShellInit = ''
             if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
