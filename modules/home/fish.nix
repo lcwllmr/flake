@@ -1,8 +1,9 @@
 #
-# Fish shell with vim bindings and neat little prompt.
+# Fish shell with vim bindings, neat little prompt, and some useful
+# development tools that I use frequently.
 #
 
-{ lib, options, ... }:
+{ pkgs, lib, options, ... }:
 with lib;
 {
   config =
@@ -50,10 +51,32 @@ with lib;
           fish_right_prompt.body = "";
         };
       };
+
+      home.packages = with pkgs; [
+        nnn curl wget busybox
+        devenv
+      ];
+
+      programs.direnv = {
+        enable = true;
+        nix-direnv.enable = true;
+      };
+
+      programs.ripgrep.enable = true;
+      programs.fd = {
+        enable = true;
+        ignores = [ ".git/" ];
+      };
+      programs.fzf = {
+        enable = true;
+        enableFishIntegration = true;
+        defaultCommand = "fd --type f --hidden --no-require-git";
+      };
     }
     // optionalAttrs (hasAttr "persist" options) {
       persist.dirs = [
         ".local/share/fish" # preserve fish_history file
+        ".local/share/direnv" # otherwise you'd need to rebuild devenvs etc. after each reboot
       ];
     };
 }
