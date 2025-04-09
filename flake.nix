@@ -80,5 +80,9 @@
         t450s = import ./configs/nixos/t450s.nix { inherit inputs; };
         cmx150 = import ./configs/wsl/cmx150.nix { inherit inputs; };
       };
+
+      homeConfigurations = {
+        rpi500 = import ./configs/rpi500.nix { inherit inputs; };
+      };
     };
 }
