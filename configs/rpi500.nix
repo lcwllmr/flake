@@ -11,6 +11,13 @@ inputs.home-manager.lib.homeManagerConfiguration {
       home.homeDirectory = "/home/lcwllmr";
       home.stateVersion = "24.11";
       programs.home-manager.enable = true;
+
+      programs.bash = {
+        enable = true;
+        bashrcExtra = ''
+          fish
+        '';
+      };
     }
     inputs.self.homeModules.git
     inputs.self.homeModules.fish
