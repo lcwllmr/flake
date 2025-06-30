@@ -30,6 +30,14 @@ in
       };
     };
   };
+  fileSystems."/home/lcwllmr/flake" = {
+    device = "flake";
+    fsType = "9p";
+    options = [
+      "trans=virtio"
+      "version=9p2000.L"
+    ];
+  };
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 0;
@@ -43,12 +51,16 @@ in
     "flakes"
   ];
   services.openssh.enable = true;
-  users.users.root = {
-    initialPassword = "root";
+  users.users.lcwllmr = {
+    initialPassword = "hello";
+    isNormalUser = true;
+    extraGroups = [ "wheel" ];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFjQwN0XxtdzGX6TgZhSj/D9oCCU2n2FGAYrWlip6ZtM"
     ];
   };
+
+  security.polkit.enable = true;
 
   environment.systemPackages = with pkgs; [
     helix
@@ -56,7 +68,7 @@ in
 
   sops = {
     defaultSopsFile = ../../secrets.yaml;
-    age.keyFile = "/root/.config/sops/age/keys.txt";
+    age.keyFile = "/home/lcwllmr/.config/sops/age/keys.txt";
     secrets.tsauthkey = { };
   };
 

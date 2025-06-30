@@ -13,12 +13,12 @@
       set -e
 
       build_image() {
-        rm result
+        rm -f result "$DISK"
         rm -f "$DISK"
         gum spin --title "building generation script..." --show-output \
         -- nix build .#nixosConfigurations.testvm.config.system.build.diskoImagesScript
         echo "done. executing script to build image..."
-        ./result --post-format-files ~/.config/sops/age/keys.txt /root/.config/sops/age/keys.txt
+        ./result --post-format-files ~/.config/sops/age/keys.txt /home/lcwllmr/.config/sops/age/keys.txt
       }
 
       CPUS="4"
@@ -43,6 +43,7 @@
           -device virtio-net-pci,netdev=net0 \
           -drive if=pflash,format=raw,readonly=on,file=${pkgs.OVMF.firmware} \
           -drive if=pflash,format=raw,readonly=on,file=${pkgs.OVMF.variables} \
+          -virtfs local,path="$(pwd)",mount_tag=flake,security_model=passthrough \
           -drive "if=virtio,format=raw,file=$DISK" \
           -pidfile ./pidfile "''${EXTRA_QEMU_FLAGS[@]}" &
         disown
@@ -55,7 +56,7 @@
         echo "STATUS:"
         OPTS=("quit")
         if [ -f "pidfile" ]; then
-          echo "  vm running unter pid" "$(<pidfile)"
+          echo "  vm running under pid" "$(<pidfile)"
           OPTS+=("ssh into vm")
           OPTS+=("kill vm")
         else
@@ -79,8 +80,8 @@
           "ssh into vm")
             echo "$CMD"
             gum spin --title "waiting for ssh server to start..." --show-output \
-            -- ssh -p 2222 root@localhost true
-            ssh -p 2222 root@localhost
+            -- ssh -p 2222 lcwllmr@localhost true
+            ssh -p 2222 lcwllmr@localhost
             ;;
           "kill vm")
             echo "$CMD"
