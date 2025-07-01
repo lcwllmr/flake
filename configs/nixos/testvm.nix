@@ -86,6 +86,7 @@ in
 
     imports = [
       inputs.self.homeModules.git
+      inputs.self.homeModules.fish
     ];
 
     programs.helix = {

@@ -35,6 +35,7 @@
         };
         homeModules = {
           git = import ./modules/home/git.nix;
+          fish = import ./modules/home/fish.nix;
         };
       };
     };
