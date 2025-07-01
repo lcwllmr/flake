@@ -37,6 +37,14 @@
           git = import ./modules/home/git.nix;
           fish = import ./modules/home/fish.nix;
         };
+        homeConfigurations = {
+          t490s = inputs.home-manager.lib.homeManagerConfiguration {
+            pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
+            modules = [
+              ./configs/home/t490s.nix
+            ];
+          };
+        };
       };
     };
 }
