@@ -10,3 +10,4 @@
 
 - [NixOS options search](https://search.nixos.org/options?channel=unstable)
 - [Disko configuration examples](https://github.com/nix-community/disko/tree/master/example)
+- [Home Manager options search](https://home-manager-options.extranix.com/)

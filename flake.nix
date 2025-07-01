@@ -6,13 +6,16 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager";
+    home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
     inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        inputs.home-manager.flakeModules.home-manager
+      ];
       systems = [ "x86_64-linux" ];
       perSystem =
         { pkgs, ... }:
@@ -29,6 +32,9 @@
               ./configs/nixos/testvm.nix
             ];
           };
+        };
+        homeModules = {
+          git = import ./modules/home/git.nix;
         };
       };
     };

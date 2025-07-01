@@ -13,6 +13,7 @@ in
     (modulesPath + "/profiles/qemu-guest.nix")
     inputs.disko.nixosModules.disko
     inputs.sops-nix.nixosModules.sops
+    inputs.home-manager.nixosModules.home-manager
   ];
 
   # hardware
@@ -62,10 +63,6 @@ in
 
   security.polkit.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    helix
-  ];
-
   sops = {
     defaultSopsFile = ../../secrets.yaml;
     age.keyFile = "/home/lcwllmr/.config/sops/age/keys.txt";
@@ -77,5 +74,23 @@ in
     authKeyFile = "/run/secrets/tsauthkey";
     extraUpFlags = [ "--ssh" ];
     extraDaemonFlags = [ "--state=mem:" ]; # ephemeral node
+  };
+
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+  home-manager.users.lcwllmr = {
+    home.username = "lcwllmr";
+    home.homeDirectory = "/home/lcwllmr";
+    home.stateVersion = config.system.nixos.release;
+    programs.home-manager.enable = true;
+
+    imports = [
+      inputs.self.homeModules.git
+    ];
+
+    programs.helix = {
+      enable = true;
+      defaultEditor = true;
+    };
   };
 }
