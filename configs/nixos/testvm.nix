@@ -76,5 +76,6 @@ in
     enable = true;
     authKeyFile = "/run/secrets/tsauthkey";
     extraUpFlags = [ "--ssh" ];
+    extraDaemonFlags = [ "--state=mem:" ]; # ephemeral node
   };
 }
