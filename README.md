@@ -2,7 +2,6 @@
 
 ## To-do list
 
-- add home-manager configs for tmux
 - add impermanence modules and script from old flake
 - add nixos module for simple cloud server and setup cmx150
 
