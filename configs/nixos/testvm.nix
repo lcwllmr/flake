@@ -14,6 +14,7 @@ in
     inputs.disko.nixosModules.disko
     inputs.sops-nix.nixosModules.sops
     inputs.home-manager.nixosModules.home-manager
+    ../../modules/nixos/shallow-cloud.nix
   ];
 
   # hardware
@@ -55,7 +56,8 @@ in
   users.users.lcwllmr = {
     initialPassword = "hello";
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "docker" ];
+    linger = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFjQwN0XxtdzGX6TgZhSj/D9oCCU2n2FGAYrWlip6ZtM"
     ];
@@ -63,10 +65,13 @@ in
 
   security.polkit.enable = true;
 
+  time.timeZone = "Europe/Oslo";
+  i18n.defaultLocale = "en_US.UTF-8";
+
   sops = {
     defaultSopsFile = ../../secrets.yaml;
-    age.keyFile = "/home/lcwllmr/.config/sops/age/keys.txt";
-    secrets.tsauthkey = { };
+    age.keyFile = "/var/lib/sops/age/keys.txt";
+    secrets.tsauthkey.owner = "lcwllmr";
   };
 
   services.tailscale = {
@@ -74,6 +79,11 @@ in
     authKeyFile = "/run/secrets/tsauthkey";
     extraUpFlags = [ "--ssh" ];
     extraDaemonFlags = [ "--state=mem:" ]; # ephemeral node
+  };
+
+  virtualisation.docker = {
+    enable = true;
+    enableOnBoot = true;
   };
 
   home-manager.useGlobalPkgs = true;
@@ -87,6 +97,8 @@ in
     imports = [
       inputs.self.homeModules.git
       inputs.self.homeModules.fish
+      inputs.self.homeModules.tmux
+      inputs.self.homeModules.ssh
     ];
 
     programs.helix = {
