@@ -36,6 +36,8 @@
         homeModules = {
           git = import ./modules/home/git.nix;
           fish = import ./modules/home/fish.nix;
+          tmux = import ./modules/home/tmux.nix;
+          ssh = import ./modules/home/ssh.nix;
         };
         homeConfigurations = {
           t490s = inputs.home-manager.lib.homeManagerConfiguration {
