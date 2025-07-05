@@ -4,6 +4,11 @@
   #  - add some options (e.g. ports, host directories, secrets) to configure more transparently
   #  - check if tailscale and docker are available and user must be lingering and part of docker group
   #  - maybe split into multiple files
+
+  systemd.tmpfiles.rules = [
+    "d /drive 0755 lcwllmr - - -"
+    "d /var/lib/cloud 0755 lcwllmr - - -"
+  ];
   
   systemd.services.ts-filebrowser = let
     serveConfig = pkgs.writeText "ts-filebrowser-serve.json" ''
@@ -50,11 +55,11 @@
           environment: # this seem to be undocumented as of right now
             - FB_NOAUTH=true
             - FB_PORT=1234
-            - FB_DATABASE=/filebrowser/db
+            - FB_DATABASE=/filebrowser/state.db
             - FB_ROOT=/drive
           volumes:
-            - /cloud/state/filebrowser:/filebrowser
-            - /cloud/drive:/drive
+            - /var/lib/cloud/filebrowser:/filebrowser
+            - /drive:/drive
           depends_on:
             - tailscale
           network_mode: service:tailscale
@@ -62,9 +67,8 @@
         tsfb-tailscale-state:
     '';
     upCmd = pkgs.writeShellScriptBin "ts-filebrowser-service-up" ''
-      mkdir -p /cloud/drive
-      mkdir -p /cloud/state/filebrowser
-      touch /cloud/state/filebrowser/db
+      mkdir -p /var/lib/cloud/filebrowser
+      touch /var/lib/cloud/filebrowser/state.db
       export TS_AUTHKEY=''$(</run/secrets/tsauthkey)
       docker-compose -f ${composeFile} up
     '';
@@ -73,7 +77,7 @@
     '';
   in {
     after = ["docker.service" "docker.socket"];
-    wantedBy = ["default.target"];
+    wantedBy = ["multi-user.target"];
     path = [ pkgs.docker-compose ];
     serviceConfig = {
       Type = "simple";
