@@ -24,6 +24,9 @@
           apps.testvm = import ./apps/testvm.nix { pkgs = pkgs; };
         };
       flake = {
+        nixosModules = {
+          tscloud = import ./modules/nixos/tscloud;
+        };
         nixosConfigurations = {
           testvm = inputs.nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
