@@ -14,7 +14,7 @@ in
     inputs.disko.nixosModules.disko
     inputs.sops-nix.nixosModules.sops
     inputs.home-manager.nixosModules.home-manager
-    ../../modules/nixos/shallow-cloud.nix
+    ../../modules/nixos/tscloud
   ];
 
   # hardware
@@ -78,12 +78,18 @@ in
     enable = true;
     authKeyFile = "/run/secrets/tsauthkey";
     extraUpFlags = [ "--ssh" ];
-    extraDaemonFlags = [ "--state=mem:" ]; # ephemeral node
   };
 
   virtualisation.docker = {
     enable = true;
     enableOnBoot = true;
+  };
+
+  services.tscloud = {
+    enable = true;
+    user = "lcwllmr";
+    tailscaleAuthkeyFile = "/run/secrets/tsauthkey";
+    filebrowser.enable = true;
   };
 
   home-manager.useGlobalPkgs = true;
