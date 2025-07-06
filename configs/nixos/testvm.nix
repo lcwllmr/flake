@@ -26,18 +26,17 @@ in
     content = {
       type = "gpt";
       partitions = {
-        esp = tools.disko.espPartition { };
-        nixos = {
-          name = "nixos";
-          size = "100%";
-          content = tools.disko.luksPartition {
-            name = "crypted";
-            content = tools.disko.simpleExt4RootPartition;
-          };
-        };
+        esp = tools.disko.espPartition;
+        nixos = tools.disko.btrfsOnLuksRootPartition ({
+          "/root" = tools.disko.btrfsSubvolume "root" "/";
+          "/nix" = tools.disko.btrfsSubvolume "nix" "/nix";
+          "/persist" = tools.disko.btrfsSubvolume "persist" "/persist";
+          "/swap" = tools.disko.swapFile "1G";
+        });
       };
     };
   };
+
   fileSystems."/home/lcwllmr/flake" = {
     device = "flake";
     fsType = "9p";
