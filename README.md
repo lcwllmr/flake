@@ -3,7 +3,8 @@
 ## To-do list
 
 - add impermanence modules and script from old flake
-- add nixos module for simple cloud server and setup cmx150
+- integrate simple webdav server into tscloud (probably [this one](https://github.com/hacdias/webdav))
+- setup cmx150 with impermanence and tscloud
 
 ## Cheatsheet
 
