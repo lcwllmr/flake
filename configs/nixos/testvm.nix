@@ -14,7 +14,6 @@ in
     inputs.disko.nixosModules.disko
     inputs.sops-nix.nixosModules.sops
     inputs.home-manager.nixosModules.home-manager
-    inputs.self.nixosModules.tscloud
   ];
 
   # hardware
@@ -56,7 +55,7 @@ in
   users.users.lcwllmr = {
     initialPassword = "hello";
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ];
+    extraGroups = [ "wheel" ];
     linger = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFjQwN0XxtdzGX6TgZhSj/D9oCCU2n2FGAYrWlip6ZtM"
@@ -72,24 +71,6 @@ in
     defaultSopsFile = ../../secrets.yaml;
     age.keyFile = "/var/lib/sops/age/keys.txt";
     secrets.tsauthkey.owner = "lcwllmr";
-  };
-
-  services.tailscale = {
-    enable = true;
-    authKeyFile = "/run/secrets/tsauthkey";
-    extraUpFlags = [ "--ssh" ];
-  };
-
-  virtualisation.docker = {
-    enable = true;
-    enableOnBoot = true;
-  };
-
-  services.tscloud = {
-    enable = true;
-    user = "lcwllmr";
-    tailscaleAuthkeyFile = "/run/secrets/tsauthkey";
-    filebrowser.enable = true;
   };
 
   home-manager.useGlobalPkgs = true;
