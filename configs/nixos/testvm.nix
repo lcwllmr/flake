@@ -27,7 +27,14 @@ in
       type = "gpt";
       partitions = {
         esp = tools.disko.espPartition { };
-        root = tools.disko.simpleExt4RootPartition;
+        nixos = {
+          name = "nixos";
+          size = "100%";
+          content = tools.disko.luksPartition {
+            name = "crypted";
+            content = tools.disko.simpleExt4RootPartition;
+          };
+        };
       };
     };
   };

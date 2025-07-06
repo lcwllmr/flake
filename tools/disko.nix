@@ -15,11 +15,26 @@
     };
 
   simpleExt4RootPartition = {
-    size = "100%";
-    content = {
-      type = "filesystem";
-      format = "ext4";
-      mountpoint = "/";
-    };
+    type = "filesystem";
+    format = "ext4";
+    mountpoint = "/";
+  };
+
+  luksPartition =
+  {
+    name,
+    content,
+  }:
+  {
+    type = "luks";
+    name = name;
+    extraOpenArgs = [
+      "--allow-discards"
+      "--perf-no_read_workqueue"
+      "--perf-no_write_workqueue"
+    ];
+    passwordFile = "/tmp/keyfile";
+    settings.allowDiscards = true;
+    content = content;
   };
 }

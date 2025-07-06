@@ -18,7 +18,10 @@
         gum spin --title "building generation script..." --show-output \
         -- nix build .#nixosConfigurations.testvm.config.system.build.diskoImagesScript
         echo "done. executing script to build image..."
-        ./result --post-format-files ~/.config/sops/age/keys.txt /var/lib/sops/age/keys.txt
+        echo "hello" > /tmp/keyfile
+        ./result \
+          --pre-format-files /tmp/keyfile keyfile \
+          --post-format-files ~/.config/sops/age/keys.txt var/lib/sops/age/keys.txt
       }
 
       CPUS="4"
