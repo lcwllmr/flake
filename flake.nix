@@ -41,10 +41,14 @@
           fish = import ./modules/home/fish.nix;
           tmux = import ./modules/home/tmux.nix;
           ssh = import ./modules/home/ssh.nix;
+          helix = import ./modules/home/helix.nix;
         };
         homeConfigurations = {
           t490s = inputs.home-manager.lib.homeManagerConfiguration {
             pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
+            extraSpecialArgs = {
+              inputs = inputs;
+            };
             modules = [
               ./configs/home/t490s.nix
             ];

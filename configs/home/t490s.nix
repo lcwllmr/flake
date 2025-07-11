@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   home.username = "lcwllmr";
   home.homeDirectory = "/home/lcwllmr";
@@ -9,10 +9,11 @@
     uv
   ];
 
-  imports = [
-    ../../modules/home/fish.nix
-    ../../modules/home/git.nix
-    ../../modules/home/ssh.nix
-    ../../modules/home/tmux.nix
+  imports = with inputs.self.homeModules; [
+    fish
+    git
+    ssh
+    tmux
+    helix
   ];
 }
