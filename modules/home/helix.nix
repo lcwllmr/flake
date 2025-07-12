@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   programs.helix = {
     enable = true;
@@ -10,6 +11,19 @@
           select = "underline";
         };
       };
+    };
+    languages = {
+      language-server.ruff = with pkgs; {
+        command = "${ruff}/bin/ruff";
+        args = ["server"];
+      };
+      language = [
+        {
+          name = "python";
+          language-servers = ["ruff"];
+          auto-format = true;
+        }
+      ];
     };
   };
 }
