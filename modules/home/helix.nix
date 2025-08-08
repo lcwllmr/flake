@@ -10,10 +10,15 @@
     settings = {
       editor = {
         line-number = "relative";
+        soft-wrap.enable = true;
         cursor-shape = {
           insert = "bar";
           normal = "block";
           select = "underline";
+        };
+        file-picker = {
+          hidden = false;
+          git-ignore = true;
         };
       };
     };
