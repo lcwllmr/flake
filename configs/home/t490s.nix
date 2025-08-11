@@ -15,5 +15,6 @@
     ssh
     tmux
     helix
+    direnv
   ];
 }

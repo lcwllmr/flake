@@ -42,6 +42,7 @@
           tmux = import ./modules/home/tmux.nix;
           ssh = import ./modules/home/ssh.nix;
           helix = import ./modules/home/helix.nix;
+          direnv = import ./modules/home/direnv.nix;
         };
         homeConfigurations = {
           t490s = inputs.home-manager.lib.homeManagerConfiguration {
